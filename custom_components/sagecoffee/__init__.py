@@ -284,8 +284,19 @@ async def async_setup(hass: HomeAssistant, config: dict[str, Any]) -> bool:
         coordinator = entry.runtime_data
 
         try:
-            # Call the API to disable wake schedule
-            await coordinator.client.disable_wake_schedule(serial=serial)
+            # The device silently ignores an empty wake_schedule list, so the
+            # schedule can't be cleared outright. Instead, preserve the known
+            # entries and flip each one's "on" flag to False.
+            state = coordinator.get_state(serial) or {}
+            current_schedule = state.get("wake_schedule") or []
+            if current_schedule:
+                disabled_schedule = [
+                    {**s, "on": False} for s in current_schedule
+                ]
+                await coordinator.client.set_coffee_params(
+                    {"cfg": {"wake_schedule": disabled_schedule}},
+                    serial=serial,
+                )
         except Exception as err:
             raise HomeAssistantError(f"Failed to disable wake schedule: {err}") from err
 
