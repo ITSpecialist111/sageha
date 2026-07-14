@@ -92,48 +92,46 @@ class SageCoffeeCoordinator(DataUpdateCoordinator[dict[str, Any]]):
     def _update_state_from_device(self, state: Any) -> None:
         """Update internal state from a DeviceState object."""
         serial = state.serial_number
-        raw_schedule = (
-            state.raw_data.get("reported", {})
-            .get("cfg", {})
-            .get("default", {})
-            .get("wake_schedule")
-        )
+        reported = state.raw_data.get("reported", {})
+        cfg_default = reported.get("cfg", {}).get("default", {})
+        if not isinstance(cfg_default, dict):
+            cfg_default = {}
+        if not cfg_default:
+            cfg_default = reported.get("cfg.default", {})
+            if not isinstance(cfg_default, dict):
+                cfg_default = {}
+        pairing = reported.get("pairing", {})
+        if not isinstance(pairing, dict):
+            pairing = {}
+        raw_schedule = cfg_default.get("wake_schedule")
         self._states[serial] = {
             "reported_state": state.reported_state,
             "desired_state": state.desired_state,
+            "state_report_version": state.version,
+            "reported_version": reported.get("version"),
+            "model": reported.get("model"),
             "boiler_temps": [
                 {"id": b.id, "cur_temp": b.current_temp, "temp_sp": b.target_temp}
                 for b in (state.boiler_temps or [])
             ],
             "grind_size": state.grind_size,
-            "theme": state.raw_data.get("reported", {})
-            .get("cfg", {})
-            .get("default", {})
-            .get("theme"),
-            "brightness": state.raw_data.get("reported", {})
-            .get("cfg", {})
-            .get("default", {})
-            .get("brightness"),
-            "work_light_brightness": state.raw_data.get("reported", {})
-            .get("cfg", {})
-            .get("default", {})
-            .get("work_light_brightness"),
-            "volume": state.raw_data.get("reported", {})
-            .get("cfg", {})
-            .get("default", {})
-            .get("vol"),
-            "idle_time": state.raw_data.get("reported", {})
-            .get("cfg", {})
-            .get("default", {})
-            .get("idle_time"),
-            "timezone": state.raw_data.get("reported", {})
-            .get("cfg", {})
-            .get("default", {})
-            .get("timezone"),
+            "theme": cfg_default.get("theme"),
+            "brightness": cfg_default.get("brightness"),
+            "work_light_brightness": cfg_default.get("work_light_brightness"),
+            "volume": cfg_default.get("vol"),
+            "idle_time": cfg_default.get("idle_time"),
+            "temperature_unit": cfg_default.get("temp_unit"),
+            "timezone": cfg_default.get("timezone"),
+            "remote_wake": pairing.get(
+                "remote_wake", cfg_default.get("remote_wake_enable")
+            ),
+            "last_paired": pairing.get("last_paired"),
+            "wake_schedule_raw": raw_schedule,
             "wake_schedule": [
                 s for s in raw_schedule if isinstance(s, dict)
             ] if isinstance(raw_schedule, list) else [],
-            "firmware": state.raw_data.get("reported", {}).get("firmware", {}),
+            "firmware": reported.get("firmware", {}),
+            "errors": reported.get("errors"),
         }
 
     async def async_start_websocket(self) -> None:

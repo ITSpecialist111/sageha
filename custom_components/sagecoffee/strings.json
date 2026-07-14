@@ -124,8 +124,38 @@
       "firmware_version": {
         "name": "Firmware Version"
       },
+      "firmware_mcu0": {
+        "name": "MCU Firmware Version"
+      },
+      "firmware_ota_service": {
+        "name": "OTA Service Version"
+      },
+      "firmware_sompro_image": {
+        "name": "SOM Image Version"
+      },
       "wake_schedule_next": {
         "name": "Next Wake Time"
+      },
+      "wake_schedule": {
+        "name": "Wake Schedule"
+      },
+      "temperature_unit": {
+        "name": "Temperature Unit"
+      },
+      "timezone": {
+        "name": "Timezone"
+      },
+      "remote_wake": {
+        "name": "Remote Wake"
+      },
+      "last_paired": {
+        "name": "Last Paired"
+      },
+      "state_report_version": {
+        "name": "State Report Version"
+      },
+      "errors_count": {
+        "name": "Errors Count"
       }
     },
     "switch": {

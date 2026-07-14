@@ -108,7 +108,17 @@ For each coffee machine, the integration creates:
 | Volume                   | Volume level percentage                        |
 | Auto-off Time            | Idle time before auto-sleep (minutes)          |
 | Next Wake Time           | Next scheduled automatic wake time             |
+| Wake Schedule            | Raw wake schedule summary                      |
+| Temperature Unit         | Configured temperature unit                    |
+| Timezone                 | Configured machine timezone                    |
+| Remote Wake              | Whether remote wake is enabled                 |
+| Last Paired              | Last cloud pairing timestamp                   |
+| State Report Version     | Latest WebSocket state report version          |
 | Firmware Version         | Installed firmware version (diagnostic)        |
+| MCU Firmware Version     | Installed MCU firmware version (diagnostic)    |
+| OTA Service Version      | Installed OTA service version (diagnostic)     |
+| SOM Image Version        | Installed SOM image version (diagnostic)       |
+| Errors Count             | Number of appliance errors reported            |
 
 ## Actions
 
