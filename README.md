@@ -1,6 +1,6 @@
 # Sage Coffee Home Assistant Integration
 
-[![hacs_badge](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://github.com/hacs/integration)
+[![hacs_badge](https://img.shields.io/badge/HACS-Default-41BDF5.svg)](https://github.com/hacs/integration)
 
 Home Assistant custom integration for Sage/Breville connected coffee machines.
 
@@ -23,13 +23,12 @@ This integration uses the [sagecoffee](https://github.com/simonjgreen/sagecoffee
 
 ### HACS (Recommended)
 
+Sage Coffee is included in the default HACS repository, so no custom repository setup is required.
+
 1. Open HACS in Home Assistant
-2. Click the three dots in the top right corner
-3. Select "Custom repositories"
-4. Add `https://github.com/simonjgreen/sageha` as a custom repository (Category: Integration)
-5. Click "Add"
-6. Find "Sage Coffee" in the HACS integrations list and install it
-7. Restart Home Assistant
+2. Search for "Sage Coffee"
+3. Click on it and select "Download"
+4. Restart Home Assistant
 
 ### Manual Installation
 
