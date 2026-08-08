@@ -256,6 +256,7 @@ SENSOR_DESCRIPTIONS: tuple[SageCoffeeSensorEntityDescription, ...] = (
         name="Firmware Version",
         icon="mdi:chip",
         entity_category=EntityCategory.DIAGNOSTIC,
+        entity_registry_enabled_default=False,
         value_fn=lambda state: (state.get("firmware") or {}).get("appVersion"),
     ),
     SageCoffeeSensorEntityDescription(
@@ -264,6 +265,7 @@ SENSOR_DESCRIPTIONS: tuple[SageCoffeeSensorEntityDescription, ...] = (
         name="MCU Firmware Version",
         icon="mdi:chip",
         entity_category=EntityCategory.DIAGNOSTIC,
+        entity_registry_enabled_default=False,
         value_fn=lambda state: (state.get("firmware") or {}).get("mcu0"),
     ),
     SageCoffeeSensorEntityDescription(
@@ -272,6 +274,7 @@ SENSOR_DESCRIPTIONS: tuple[SageCoffeeSensorEntityDescription, ...] = (
         name="OTA Service Version",
         icon="mdi:chip",
         entity_category=EntityCategory.DIAGNOSTIC,
+        entity_registry_enabled_default=False,
         value_fn=lambda state: (state.get("firmware") or {}).get("otaServiceVersion"),
     ),
     SageCoffeeSensorEntityDescription(
@@ -280,6 +283,7 @@ SENSOR_DESCRIPTIONS: tuple[SageCoffeeSensorEntityDescription, ...] = (
         name="SOM Image Version",
         icon="mdi:chip",
         entity_category=EntityCategory.DIAGNOSTIC,
+        entity_registry_enabled_default=False,
         value_fn=lambda state: (state.get("firmware") or {}).get("sompro_image"),
     ),
     SageCoffeeSensorEntityDescription(
@@ -296,6 +300,7 @@ SENSOR_DESCRIPTIONS: tuple[SageCoffeeSensorEntityDescription, ...] = (
         name="Wake Schedule",
         icon="mdi:alarm",
         entity_category=EntityCategory.DIAGNOSTIC,
+        entity_registry_enabled_default=False,
         value_fn=_format_wake_schedule,
     ),
     SageCoffeeSensorEntityDescription(
@@ -304,6 +309,7 @@ SENSOR_DESCRIPTIONS: tuple[SageCoffeeSensorEntityDescription, ...] = (
         name="Temperature Unit",
         icon="mdi:thermometer",
         entity_category=EntityCategory.DIAGNOSTIC,
+        entity_registry_enabled_default=False,
         value_fn=_format_temperature_unit,
     ),
     SageCoffeeSensorEntityDescription(
@@ -312,6 +318,7 @@ SENSOR_DESCRIPTIONS: tuple[SageCoffeeSensorEntityDescription, ...] = (
         name="Timezone",
         icon="mdi:map-clock",
         entity_category=EntityCategory.DIAGNOSTIC,
+        entity_registry_enabled_default=False,
         value_fn=lambda state: state.get("timezone"),
     ),
     SageCoffeeSensorEntityDescription(
@@ -320,6 +327,7 @@ SENSOR_DESCRIPTIONS: tuple[SageCoffeeSensorEntityDescription, ...] = (
         name="Remote Wake",
         icon="mdi:power-settings",
         entity_category=EntityCategory.DIAGNOSTIC,
+        entity_registry_enabled_default=False,
         value_fn=_format_remote_wake,
     ),
     SageCoffeeSensorEntityDescription(
@@ -329,6 +337,7 @@ SENSOR_DESCRIPTIONS: tuple[SageCoffeeSensorEntityDescription, ...] = (
         icon="mdi:link-variant",
         device_class=SensorDeviceClass.TIMESTAMP,
         entity_category=EntityCategory.DIAGNOSTIC,
+        entity_registry_enabled_default=False,
         value_fn=_get_last_paired,
     ),
     SageCoffeeSensorEntityDescription(
@@ -337,6 +346,7 @@ SENSOR_DESCRIPTIONS: tuple[SageCoffeeSensorEntityDescription, ...] = (
         name="State Report Version",
         icon="mdi:counter",
         entity_category=EntityCategory.DIAGNOSTIC,
+        entity_registry_enabled_default=False,
         value_fn=lambda state: state.get("state_report_version"),
     ),
     SageCoffeeSensorEntityDescription(
@@ -345,6 +355,7 @@ SENSOR_DESCRIPTIONS: tuple[SageCoffeeSensorEntityDescription, ...] = (
         name="Errors Count",
         icon="mdi:alert-circle-outline",
         entity_category=EntityCategory.DIAGNOSTIC,
+        entity_registry_enabled_default=False,
         value_fn=_get_errors_count,
     ),
 )
@@ -390,4 +401,3 @@ class SageCoffeeSensor(SageCoffeeEntity, SensorEntity):
         if state is None:
             return None
         return self.entity_description.value_fn(state)
-
