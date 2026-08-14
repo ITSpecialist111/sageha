@@ -69,7 +69,7 @@ STEP_TOKEN_DATA_SCHEMA = vol.Schema(
 class SageCoffeeConfigFlow(ConfigFlow, domain=DOMAIN):
     """Handle a config flow for Sage Coffee."""
 
-    VERSION = 1
+    VERSION = 2
 
     def __init__(self) -> None:
         """Initialize the config flow."""
