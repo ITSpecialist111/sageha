@@ -366,10 +366,12 @@ async def async_setup_entry(hass: HomeAssistant, entry: SageCoffeeConfigEntry) -
     # (load_verify_locations performs blocking I/O loading certificate bundles)
     ssl_context = await hass.async_add_executor_job(ssl_util.client_context)
 
+    brand = entry.data.get(CONF_BRAND) or MACHINE_TYPE_SAGE
+
     client = SageCoffeeClient(
         client_id=DEFAULT_CLIENT_ID,
         refresh_token=refresh_token,
-        app=entry.data.get(CONF_BRAND) or MACHINE_TYPE_SAGE,
+        app=brand,
         httpx_client=http_client,
         ssl_context=ssl_context,
     )
@@ -378,17 +380,34 @@ async def async_setup_entry(hass: HomeAssistant, entry: SageCoffeeConfigEntry) -
     try:
         # Discover appliances
         appliances = await client.list_appliances()
-        if not appliances:
-            raise ConfigEntryNotReady("No appliances found")
 
-        _LOGGER.debug("Found %d appliances", len(appliances))
-
+    # Home Assistant control-flow exceptions describe what actually happened, so
+    # let them through untouched rather than relabelling them as connectivity
+    # failures (see #56).
+    except (ConfigEntryNotReady, ConfigEntryAuthFailed):
+        await client.__aexit__(None, None, None)
+        raise
     except Exception as err:
         _LOGGER.error(
             "Failed to connect to Sage Coffee API: %s: %s", type(err).__name__, err
         )
         await client.__aexit__(None, None, None)
         raise ConfigEntryNotReady from err
+
+    # An empty list is a successful response, not a connection failure, so it is
+    # checked outside the handler above and reported as its own condition.
+    if not appliances:
+        _LOGGER.error(
+            "No appliances found for brand '%s'. This usually means the selected "
+            "brand does not match the account the machine is paired to - check "
+            "which app (Sage or Breville) the machine was set up in and "
+            "reconfigure the integration if it differs",
+            brand,
+        )
+        await client.__aexit__(None, None, None)
+        raise ConfigEntryNotReady(f"No appliances found for brand '{brand}'")
+
+    _LOGGER.debug("Found %d appliances", len(appliances))
 
     # Create coordinator
     coordinator = SageCoffeeCoordinator(hass, client, appliances, entry)
