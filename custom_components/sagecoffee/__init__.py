@@ -25,7 +25,14 @@ from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 from homeassistant.util import ssl as ssl_util
 import voluptuous as vol
 
-from .const import CONF_BRAND, CONF_REFRESH_TOKEN, DOMAIN, PLATFORMS
+from .const import (
+    CONF_BRAND,
+    CONF_MACHINE_TYPE_LEGACY,
+    CONF_REFRESH_TOKEN,
+    DOMAIN,
+    MACHINE_TYPE_SAGE,
+    PLATFORMS,
+)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -320,6 +327,32 @@ async def async_setup(hass: HomeAssistant, config: dict[str, Any]) -> bool:
     return True
 
 
+async def async_migrate_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
+    """Migrate an old config entry to the current schema."""
+    _LOGGER.debug("Migrating configuration from version %s", entry.version)
+
+    if entry.version > 2:
+        # Downgraded from a newer version of the integration, nothing we can do
+        return False
+
+    if entry.version == 1:
+        # Version 1 stored the brand under "machine_type" (renamed in 1.3.0).
+        # Entries created before the rename leave "brand" unset, which used to
+        # send a None app identifier to the API and fail with an opaque error.
+        data = {**entry.data}
+        brand = (
+            data.pop(CONF_MACHINE_TYPE_LEGACY, None)
+            or data.get(CONF_BRAND)
+            or MACHINE_TYPE_SAGE
+        )
+        data[CONF_BRAND] = brand
+
+        hass.config_entries.async_update_entry(entry, data=data, version=2)
+        _LOGGER.debug("Migrated config entry to version 2 with brand %s", brand)
+
+    return True
+
+
 async def async_setup_entry(hass: HomeAssistant, entry: SageCoffeeConfigEntry) -> bool:
     """Set up Sage Coffee from a config entry."""
     refresh_token = entry.data.get(CONF_REFRESH_TOKEN)
@@ -336,7 +369,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: SageCoffeeConfigEntry) -
     client = SageCoffeeClient(
         client_id=DEFAULT_CLIENT_ID,
         refresh_token=refresh_token,
-        app=entry.data.get(CONF_BRAND),
+        app=entry.data.get(CONF_BRAND) or MACHINE_TYPE_SAGE,
         httpx_client=http_client,
         ssl_context=ssl_context,
     )
@@ -351,7 +384,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: SageCoffeeConfigEntry) -
         _LOGGER.debug("Found %d appliances", len(appliances))
 
     except Exception as err:
-        _LOGGER.error("Failed to connect to Sage Coffee API: %s", err)
+        _LOGGER.error(
+            "Failed to connect to Sage Coffee API: %s: %s", type(err).__name__, err
+        )
         await client.__aexit__(None, None, None)
         raise ConfigEntryNotReady from err
 

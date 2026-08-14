@@ -6,6 +6,9 @@ DOMAIN = "sagecoffee"
 CONF_REFRESH_TOKEN = "refresh_token"
 CONF_BRAND = "brand"
 
+# Legacy configuration keys (migrated on setup)
+CONF_MACHINE_TYPE_LEGACY = "machine_type"
+
 # Machine type values
 MACHINE_TYPE_SAGE = "sageCoffee"
 MACHINE_TYPE_BREVILLE = "brevilleCoffee"
