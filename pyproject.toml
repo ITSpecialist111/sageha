@@ -10,5 +10,5 @@ addopts = [
 source = ["custom_components/sagecoffee"]
 
 [tool.coverage.report]
-# Starting threshold from the config flow tests; raise as more tests land.
-fail_under = 20
+# Threshold from the initial test suite; raise as more tests land.
+fail_under = 85
