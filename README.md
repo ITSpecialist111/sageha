@@ -1,6 +1,8 @@
 # Sage Coffee Home Assistant Integration
 
 [![hacs_badge](https://img.shields.io/badge/HACS-Default-41BDF5.svg)](https://github.com/hacs/integration)
+[![Tests](https://github.com/simonjgreen/sageha/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/simonjgreen/sageha/actions/workflows/tests.yml)
+[![Validate](https://github.com/simonjgreen/sageha/actions/workflows/validate.yaml/badge.svg?branch=main)](https://github.com/simonjgreen/sageha/actions/workflows/validate.yaml)
 
 Home Assistant custom integration for Sage/Breville connected coffee machines.
 
