@@ -1,0 +1,3 @@
+pytest-homeassistant-custom-component
+pytest-cov
+sagecoffee==0.2.2
