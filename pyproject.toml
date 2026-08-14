@@ -1,0 +1,14 @@
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+addopts = [
+    "--cov=custom_components.sagecoffee",
+    "--cov-report=term-missing",
+]
+
+[tool.coverage.run]
+source = ["custom_components/sagecoffee"]
+
+[tool.coverage.report]
+# Starting threshold from the config flow tests; raise as more tests land.
+fail_under = 20
