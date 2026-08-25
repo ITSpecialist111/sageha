@@ -197,6 +197,14 @@ automation:
 - Try using the sagectl CLI tool to verify your credentials work
 - Check that your machine is connected to WiFi and visible in the Sage/Breville app
 
+### Device appears in app but not in integration
+
+If you can see your machine in the official Sage/Breville mobile app but it's not appearing in Home Assistant:
+
+- Check that you're using a **regular email and password account** for authentication
+- Google account sign-in does not bind your identities between the app and the integration
+- If you only have a Google account, consider creating a password-protected account through the Sage/Breville account settings and use that for Home Assistant
+
 ### Connection Issues
 
 - The integration uses WebSocket for real-time updates; ensure your Home Assistant instance can reach `iot-api-ws.breville.com`
