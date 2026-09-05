@@ -129,10 +129,12 @@ async def test_entity_registration_and_pushed_state_changes(
     )
     assert entity_id is not None
     entity = registry.async_get(entity_id)
-    device = dr.async_get(hass).async_get_device({(DOMAIN, MOCK_SERIAL)})
     assert entity is not None
+    assert entity.device_id is not None
+    device = dr.async_get(hass).async_get(entity.device_id)
     assert device is not None
-    assert entity.device_id == device.id
+    assert (DOMAIN, MOCK_SERIAL) in device.identifiers
+    assert entity.config_entry_id == config_entry.entry_id
     assert hass.states.get(entity_id).state == STATE_OFF
 
     coordinator = config_entry.runtime_data
