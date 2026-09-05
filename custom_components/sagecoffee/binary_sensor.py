@@ -56,7 +56,7 @@ async def async_setup_entry(
 class SageCoffeeLowWaterSensor(SageCoffeeEntity, BinarySensorEntity):
     """Report the machine's water fault without estimating its water level."""
 
-    _attr_name = "Low Water"
+    _attr_translation_key = "low_water"
     _attr_device_class = BinarySensorDeviceClass.PROBLEM
     _attr_icon = "mdi:water-alert"
 

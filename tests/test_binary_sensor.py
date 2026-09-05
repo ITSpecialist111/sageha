@@ -75,6 +75,7 @@ def test_entity_metadata_and_coordinator_availability(
     sensor = SageCoffeeLowWaterSensor(coordinator, mock_appliance)
 
     assert sensor.unique_id == f"{MOCK_SERIAL}_low_water"
+    assert sensor.translation_key == "low_water"
     assert sensor.device_class is BinarySensorDeviceClass.PROBLEM
     assert sensor.available is True
     assert sensor.is_on is False
@@ -136,6 +137,7 @@ async def test_entity_registration_and_pushed_state_changes(
     assert (DOMAIN, MOCK_SERIAL) in device.identifiers
     assert entity.config_entry_id == config_entry.entry_id
     assert hass.states.get(entity_id).state == STATE_OFF
+    assert hass.states.get(entity_id).attributes["friendly_name"].endswith("Low Water")
 
     coordinator = config_entry.runtime_data
     for errors, expected in (
